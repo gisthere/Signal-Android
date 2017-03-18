@@ -53,6 +53,7 @@ public class ScribbleToolbar extends Toolbar implements View.OnClickListener {
   private ImageView brushView;
   private ImageView textView;
   private ImageView stickerView;
+  private ImageView rotateView;
 
   private ImageView separatorView;
 
@@ -91,6 +92,7 @@ public class ScribbleToolbar extends Toolbar implements View.OnClickListener {
     this.stickerView   = (ImageView) findViewById(R.id.sticker_button);
     this.separatorView = (ImageView) findViewById(R.id.separator);
     this.saveView      = (ImageView) findViewById(R.id.save);
+    this.rotateView    = (ImageView) findViewById(R.id.rotate_button);
 
     this.undoView   = (ImageView) findViewById(R.id.undo);
     this.deleteView = (ImageView) findViewById(R.id.delete);
@@ -106,6 +108,7 @@ public class ScribbleToolbar extends Toolbar implements View.OnClickListener {
     this.separatorView.setOnClickListener(this);
     this.deleteView.setOnClickListener(this);
     this.saveView.setOnClickListener(this);
+    this.rotateView.setOnClickListener(this);
   }
 
   public void setListener(@Nullable ScribbleToolbarListener listener) {
@@ -143,6 +146,8 @@ public class ScribbleToolbar extends Toolbar implements View.OnClickListener {
       if (listener != null) listener.onPaintUndo();
     } else if (v == this.saveView) {
       if (listener != null) listener.onSave();
+    } else if (v == this.rotateView) {
+      if (listener != null) listener.onRotate();
     }
   }
 
@@ -236,5 +241,6 @@ public class ScribbleToolbar extends Toolbar implements View.OnClickListener {
     public void onStickerSelected(boolean enabled);
     public void onDeleteSelected();
     public void onSave();
+    public void onRotate();
   }
 }

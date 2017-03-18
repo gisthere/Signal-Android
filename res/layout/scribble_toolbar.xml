@@ -62,6 +62,14 @@
                    android:padding="7dp"
                    android:src="@drawable/ic_tag_faces_white_24dp"/>
 
+        <ImageView android:id="@+id/rotate_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="6dp"
+                android:tint="@color/grey_800"
+                android:padding="7dp"
+                android:src="@drawable/ic_rotate_right_black_24dp"/>
+
         <ImageView android:id="@+id/text_button"
                    android:layout_width="wrap_content"
                    android:layout_height="wrap_content"

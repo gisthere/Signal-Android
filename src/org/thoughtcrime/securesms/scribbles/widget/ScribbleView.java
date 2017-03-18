@@ -20,6 +20,8 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Matrix;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -32,6 +34,7 @@ import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.resource.bitmap.GlideBitmapDrawable;
 import com.bumptech.glide.request.target.Target;
 
 import org.thoughtcrime.securesms.R;
@@ -90,53 +93,11 @@ public class ScribbleView extends FrameLayout {
 
   public @NonNull ListenableFuture<Bitmap> getRenderedImage() {
     final SettableFuture<Bitmap> future      = new SettableFuture<>();
-    final Context                context     = getContext();
-    final boolean                isLowMemory = Util.isLowMemory(context);
-
-    if (imageUri == null || masterSecret == null) {
-      future.set(null);
-      return future;
-    }
-
-    new AsyncTask<Void, Void, Bitmap>() {
-      @Override
-      protected @Nullable Bitmap doInBackground(Void... params) {
-        try {
-          int width  = Target.SIZE_ORIGINAL;
-          int height = Target.SIZE_ORIGINAL;
-
-          if (isLowMemory) {
-            width  = 768;
-            height = 768;
-          }
-
-          return Glide.with(context)
-                      .load(new DecryptableUri(masterSecret, imageUri))
-                      .asBitmap()
-                      .diskCacheStrategy(DiskCacheStrategy.NONE)
-                      .skipMemoryCache(true)
-                      .into(width, height)
-                      .get();
-        } catch (InterruptedException | ExecutionException e) {
-          Log.w(TAG, e);
-          return null;
-        }
-      }
-
-      @Override
-      protected void onPostExecute(@Nullable Bitmap bitmap) {
-        if (bitmap == null) {
-          future.set(null);
-          return;
-        }
-
-        Canvas canvas = new Canvas(bitmap);
-        motionView.render(canvas);
-        canvasView.render(canvas);
-        future.set(bitmap);
-      }
-    }.execute();
-
+    final Bitmap bitmap = ((GlideBitmapDrawable) imageView.getDrawable()).getBitmap();
+    Canvas canvas = new Canvas(bitmap);
+    motionView.render(canvas);
+    canvasView.render(canvas);
+    future.set(bitmap);
     return future;
   }
 
@@ -184,6 +145,14 @@ public class ScribbleView extends FrameLayout {
 
   public void startEditing(TextEntity entity) {
     this.motionView.startEditing(entity);
+  }
+
+  public void rotate90() {
+      Bitmap bitmap = ((GlideBitmapDrawable) this.imageView.getDrawable()).getBitmap();
+      Matrix matrix = new Matrix();
+      matrix.postRotate(90f, bitmap.getWidth() / 2f, bitmap.getHeight() / 2f);
+      bitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
+      this.imageView.setImageDrawable(new GlideBitmapDrawable(null, bitmap));
   }
 
   @Override

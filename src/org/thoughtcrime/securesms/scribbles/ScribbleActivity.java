@@ -245,6 +245,11 @@ public class ScribbleActivity extends PassphraseRequiredActionBarActivity implem
     });
   }
 
+  @Override
+  public void onRotate() {
+    scribbleView.rotate90();
+  }
+
   private final MotionView.MotionViewCallback motionViewCallback = new MotionView.MotionViewCallback() {
     @Override
     public void onEntitySelected(@Nullable MotionEntity entity) {
