@@ -93,6 +93,54 @@ public class ScribbleView extends FrameLayout {
 
   public @NonNull ListenableFuture<Bitmap> getRenderedImage() {
     final SettableFuture<Bitmap> future      = new SettableFuture<>();
+
+//    final Context                context     = getContext();
+//    final boolean                isLowMemory = Util.isLowMemory(context);
+//
+//    if (imageUri == null || masterSecret == null) {
+//      future.set(null);
+//      return future;
+//    }
+//
+//    new AsyncTask<Void, Void, Bitmap>() {
+//      @Override
+//      protected @Nullable Bitmap doInBackground(Void... params) {
+//        try {
+//          int width  = Target.SIZE_ORIGINAL;
+//          int height = Target.SIZE_ORIGINAL;
+//
+//          if (isLowMemory) {
+//            width  = 768;
+//            height = 768;
+//          }
+//
+//          return Glide.with(context)
+//                  .load(new DecryptableUri(masterSecret, imageUri))
+//                  .asBitmap()
+//                  .diskCacheStrategy(DiskCacheStrategy.NONE)
+//                  .skipMemoryCache(true)
+//                  .into(width, height)
+//                  .get();
+//        } catch (InterruptedException | ExecutionException e) {
+//          Log.w(TAG, e);
+//          return null;
+//        }
+//      }
+//
+//      @Override
+//      protected void onPostExecute(@Nullable Bitmap bitmap) {
+//        if (bitmap == null) {
+//          future.set(null);
+//          return;
+//        }
+//
+//        Canvas canvas = new Canvas(bitmap);
+//        motionView.render(canvas);
+//        canvasView.render(canvas);
+//        future.set(bitmap);
+//      }
+//    }.execute();
+
     final Bitmap bitmap = ((GlideBitmapDrawable) imageView.getDrawable()).getBitmap();
     Canvas canvas = new Canvas(bitmap);
     motionView.render(canvas);
