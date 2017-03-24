@@ -407,10 +407,6 @@ public class CanvasView extends View {
     }
   }
 
-  public void setActive(boolean active) {
-    this.active = active;
-  }
-
   /**
    * This method updates the instance of Canvas (View)
    *

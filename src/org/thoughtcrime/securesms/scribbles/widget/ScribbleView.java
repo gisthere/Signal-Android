@@ -152,11 +152,6 @@ public class ScribbleView extends FrameLayout {
     this.motionView.setMotionViewCallback(callback);
   }
 
-  public void setDrawingMode(boolean enabled) {
-    this.canvasView.setActive(enabled);
-    if (enabled) this.motionView.unselectEntity();
-  }
-
   public void setDrawingBrushColor(int color) {
     this.canvasView.setPaintFillColor(color);
     this.canvasView.setPaintStrokeColor(color);

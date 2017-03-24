@@ -28,17 +28,6 @@
                 android:layout_gravity="center"
                 android:gravity="center"/>
 
-        <org.thoughtcrime.securesms.scribbles.widget.VerticalSlideColorPicker
-                android:id="@+id/scribble_color_picker"
-                android:layout_width="13dp"
-                android:layout_height="300dp"
-                android:layout_gravity="top|right"
-                android:layout_marginRight="25dp"
-                android:layout_marginTop="20dp"
-                app:pickerBorderWidth="1dp"
-                app:pickerBorderColor="@color/grey_600"
-                app:pickerColors="@array/scribble_colors"/>
-
     </FrameLayout>
 
 </LinearLayout>

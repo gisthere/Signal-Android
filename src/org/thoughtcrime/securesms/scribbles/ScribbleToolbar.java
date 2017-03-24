@@ -41,7 +41,6 @@ public class ScribbleToolbar extends Toolbar implements View.OnClickListener {
     NONE,
     STICKER,
     TEXT,
-    BRUSH
   }
 
   private int foregroundSelectedTint;
@@ -50,7 +49,6 @@ public class ScribbleToolbar extends Toolbar implements View.OnClickListener {
   private LinearLayout toolsView;
 
   private ImageView saveView;
-  private ImageView brushView;
   private ImageView textView;
   private ImageView stickerView;
 
@@ -86,7 +84,6 @@ public class ScribbleToolbar extends Toolbar implements View.OnClickListener {
     inflate(context, R.layout.scribble_toolbar, this);
 
     this.toolsView     = (LinearLayout) findViewById(R.id.tools_view);
-    this.brushView     = (ImageView) findViewById(R.id.brush_button);
     this.textView      = (ImageView) findViewById(R.id.text_button);
     this.stickerView   = (ImageView) findViewById(R.id.sticker_button);
     this.separatorView = (ImageView) findViewById(R.id.separator);
@@ -100,7 +97,6 @@ public class ScribbleToolbar extends Toolbar implements View.OnClickListener {
     this.foregroundUnselectedTint = getResources().getColor(R.color.grey_800);
 
     this.undoView.setOnClickListener(this);
-    this.brushView.setOnClickListener(this);
     this.textView.setOnClickListener(this);
     this.stickerView.setOnClickListener(this);
     this.separatorView.setOnClickListener(this);
@@ -125,11 +121,7 @@ public class ScribbleToolbar extends Toolbar implements View.OnClickListener {
   public void onClick(View v) {
     this.toolsView.getLayoutTransition().enableTransitionType(LayoutTransition.CHANGING);
 
-    if (v == this.brushView) {
-      boolean enabled = selected != Selected.BRUSH;
-      setBrushSelected(enabled);
-      if (listener != null) listener.onBrushSelected(enabled);
-    } else if (v == this.stickerView) {
+    if (v == this.stickerView) {
       setNoneSelected();
       if (listener != null) listener.onStickerSelected(true);
     } else if (v == this.textView) {
@@ -146,38 +138,8 @@ public class ScribbleToolbar extends Toolbar implements View.OnClickListener {
     }
   }
 
-  private void setBrushSelected(boolean enabled) {
-    if (enabled) {
-
-      this.textView.setBackground(null);
-      this.textView.setColorFilter(new PorterDuffColorFilter(foregroundUnselectedTint, PorterDuff.Mode.MULTIPLY));
-
-      this.brushView.setBackground(background);
-      this.brushView.setColorFilter(new PorterDuffColorFilter(foregroundSelectedTint, PorterDuff.Mode.MULTIPLY));
-
-      this.stickerView.setBackground(null);
-      this.stickerView.setColorFilter(new PorterDuffColorFilter(foregroundUnselectedTint, PorterDuff.Mode.MULTIPLY));
-
-      this.separatorView.setVisibility(View.VISIBLE);
-      this.undoView.setVisibility(View.VISIBLE);
-      this.deleteView.setVisibility(View.GONE);
-
-      this.selected = Selected.BRUSH;
-    } else {
-      this.brushView.setBackground(null);
-      this.brushView.setColorFilter(new PorterDuffColorFilter(foregroundUnselectedTint, PorterDuff.Mode.MULTIPLY));
-      this.separatorView.setVisibility(View.GONE);
-      this.undoView.setVisibility(View.GONE);
-
-      this.selected = Selected.NONE;
-    }
-  }
-
   public void setTextSelected(boolean enabled) {
     if (enabled) {
-      this.brushView.setBackground(null);
-      this.brushView.setColorFilter(new PorterDuffColorFilter(foregroundUnselectedTint, PorterDuff.Mode.MULTIPLY));
-
       this.textView.setBackground(background);
       this.textView.setColorFilter(new PorterDuffColorFilter(foregroundSelectedTint, PorterDuff.Mode.MULTIPLY));
 
@@ -202,9 +164,6 @@ public class ScribbleToolbar extends Toolbar implements View.OnClickListener {
 
   public void setStickerSelected(boolean enabled) {
     if (enabled) {
-      this.brushView.setBackground(null);
-      this.brushView.setColorFilter(new PorterDuffColorFilter(foregroundUnselectedTint, PorterDuff.Mode.MULTIPLY));
-
       this.textView.setBackground(null);
       this.textView.setColorFilter(new PorterDuffColorFilter(foregroundUnselectedTint, PorterDuff.Mode.MULTIPLY));
 
@@ -222,7 +181,6 @@ public class ScribbleToolbar extends Toolbar implements View.OnClickListener {
   }
 
   public void setNoneSelected() {
-    setBrushSelected(false);
     setStickerSelected(false);
     setTextSelected(false);
 
@@ -230,7 +188,6 @@ public class ScribbleToolbar extends Toolbar implements View.OnClickListener {
   }
 
   public interface ScribbleToolbarListener {
-    public void onBrushSelected(boolean enabled);
     public void onPaintUndo();
     public void onTextSelected(boolean enabled);
     public void onStickerSelected(boolean enabled);

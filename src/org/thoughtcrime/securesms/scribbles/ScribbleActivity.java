@@ -24,7 +24,6 @@ import org.thoughtcrime.securesms.scribbles.viewmodel.Layer;
 import org.thoughtcrime.securesms.scribbles.viewmodel.TextLayer;
 import org.thoughtcrime.securesms.scribbles.widget.MotionView;
 import org.thoughtcrime.securesms.scribbles.widget.ScribbleView;
-import org.thoughtcrime.securesms.scribbles.widget.VerticalSlideColorPicker;
 import org.thoughtcrime.securesms.scribbles.widget.entity.ImageEntity;
 import org.thoughtcrime.securesms.scribbles.widget.entity.MotionEntity;
 import org.thoughtcrime.securesms.scribbles.widget.entity.TextEntity;
@@ -37,14 +36,13 @@ import java.util.concurrent.ExecutionException;
 import ws.com.google.android.mms.ContentType;
 
 @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
-public class ScribbleActivity extends PassphraseRequiredActionBarActivity implements ScribbleToolbar.ScribbleToolbarListener, VerticalSlideColorPicker.OnColorChangeListener {
+public class ScribbleActivity extends PassphraseRequiredActionBarActivity implements ScribbleToolbar.ScribbleToolbarListener {
 
   private static final String TAG = ScribbleActivity.class.getName();
 
   public static final int SELECT_STICKER_REQUEST_CODE = 123;
   public static final int SCRIBBLE_REQUEST_CODE       = 31424;
 
-  private VerticalSlideColorPicker colorPicker;
   private ScribbleToolbar          toolbar;
   private ScribbleView             scribbleView;
   private MasterSecret             masterSecret;
@@ -56,17 +54,12 @@ public class ScribbleActivity extends PassphraseRequiredActionBarActivity implem
     this.masterSecret = masterSecret;
     this.scribbleView = (ScribbleView) findViewById(R.id.scribble_view);
     this.toolbar      = (ScribbleToolbar) findViewById(R.id.toolbar);
-    this.colorPicker  = (VerticalSlideColorPicker) findViewById(R.id.scribble_color_picker);
 
     this.toolbar.setListener(this);
     this.toolbar.setToolColor(Color.RED);
 
     scribbleView.setMotionViewCallback(motionViewCallback);
-    scribbleView.setDrawingMode(false);
     scribbleView.setImage(getIntent().getData(), masterSecret);
-
-    colorPicker.setOnColorChangeListener(this);
-    colorPicker.setVisibility(View.GONE);
 
     setSupportActionBar(toolbar);
 
@@ -174,11 +167,6 @@ public class ScribbleActivity extends PassphraseRequiredActionBarActivity implem
     }
   }
 
-  @Override
-  public void onBrushSelected(boolean enabled) {
-    scribbleView.setDrawingMode(enabled);
-    colorPicker.setVisibility(enabled ? View.VISIBLE : View.GONE);
-  }
 
   @Override
   public void onPaintUndo() {
@@ -189,22 +177,16 @@ public class ScribbleActivity extends PassphraseRequiredActionBarActivity implem
   public void onTextSelected(boolean enabled) {
     if (enabled) {
       addTextSticker();
-      scribbleView.setDrawingMode(false);
-      colorPicker.setVisibility(View.VISIBLE);
     } else {
       scribbleView.clearSelection();
-      colorPicker.setVisibility(View.GONE);
     }
   }
 
   @Override
   public void onStickerSelected(boolean enabled) {
-    colorPicker.setVisibility(View.GONE);
-
     if (!enabled) {
       scribbleView.clearSelection();
     } else {
-      scribbleView.setDrawingMode(false);
       Intent intent = new Intent(this, StickerSelectActivity.class);
       startActivityForResult(intent, SELECT_STICKER_REQUEST_CODE);
     }
@@ -212,7 +194,6 @@ public class ScribbleActivity extends PassphraseRequiredActionBarActivity implem
 
   public void onDeleteSelected() {
     scribbleView.deleteSelected();
-    colorPicker.setVisibility(View.GONE);
   }
 
   @Override
@@ -250,13 +231,10 @@ public class ScribbleActivity extends PassphraseRequiredActionBarActivity implem
     public void onEntitySelected(@Nullable MotionEntity entity) {
       if (entity == null) {
         toolbar.setNoneSelected();
-        colorPicker.setVisibility(View.GONE);
       } else if (entity instanceof TextEntity) {
         toolbar.setTextSelected(true);
-        colorPicker.setVisibility(View.VISIBLE);
       } else {
         toolbar.setStickerSelected(true);
-        colorPicker.setVisibility(View.GONE);
       }
     }
 
@@ -266,13 +244,4 @@ public class ScribbleActivity extends PassphraseRequiredActionBarActivity implem
     }
   };
 
-  @Override
-  public void onColorChange(int color) {
-    if (color == 0) color = Color.RED;
-
-    toolbar.setToolColor(color);
-    scribbleView.setDrawingBrushColor(color);
-
-    changeTextEntityColor(color);
-  }
 }
