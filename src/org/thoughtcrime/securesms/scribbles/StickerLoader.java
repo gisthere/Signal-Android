@@ -24,29 +24,34 @@ import android.util.Log;
 import org.thoughtcrime.securesms.util.AsyncLoader;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
 
 class StickerLoader extends AsyncLoader<String[]> {
 
   private static final String TAG = StickerLoader.class.getName();
 
-  private final String assetDirectory;
+  private final ArrayList<String> assetsDirectories;
 
-  StickerLoader(Context context, String assetDirectory) {
+  StickerLoader(Context context, ArrayList<String> assetsDirectories) {
     super(context);
-    this.assetDirectory = assetDirectory;
+    this.assetsDirectories = assetsDirectories;
   }
 
   @Override
   public @NonNull
   String[] loadInBackground() {
     try {
-      String[] files = getContext().getAssets().list(assetDirectory);
-
-      for (int i=0;i<files.length;i++) {
-        files[i] = assetDirectory + "/" + files[i];
+      ArrayList<String> filesList = new ArrayList<>();
+      for (String directory: assetsDirectories) {
+        String[] files = getContext().getAssets().list(directory);
+        for (int i=0;i<files.length;i++) {
+          files[i] = directory + "/" + files[i];
+        }
+        Collections.addAll(filesList, files);
       }
 
-      return files;
+      return filesList.toArray(new String[0]);
     } catch (IOException e) {
       Log.w(TAG, e);
     }

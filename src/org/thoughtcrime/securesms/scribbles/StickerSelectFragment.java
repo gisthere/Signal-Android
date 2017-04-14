@@ -36,17 +36,20 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
 import org.thoughtcrime.securesms.R;
 
+import java.util.ArrayList;
+
 public class StickerSelectFragment extends Fragment implements LoaderManager.LoaderCallbacks<String[]> {
 
   private RecyclerView recyclerView;
-  private String assetDirectory;
+  private ArrayList<String> assetsDirectories;
+
   private StickerSelectionListener listener;
 
-  public static StickerSelectFragment newInstance(String assetDirectory) {
+  public static StickerSelectFragment newInstance(ArrayList<String> assetsDirectories) {
     StickerSelectFragment fragment = new StickerSelectFragment();
 
     Bundle args = new Bundle();
-    args.putString("assetDirectory", assetDirectory);
+    args.putStringArrayList("assetsDirectories", assetsDirectories);
     fragment.setArguments(args);
 
     return fragment;
@@ -67,7 +70,7 @@ public class StickerSelectFragment extends Fragment implements LoaderManager.Loa
   public void onActivityCreated(Bundle bundle) {
     super.onActivityCreated(bundle);
 
-    this.assetDirectory = getArguments().getString("assetDirectory");
+    this.assetsDirectories = getArguments().getStringArrayList("assetsDirectories");
 
     getLoaderManager().initLoader(0, null, this);
     this.recyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 3));
@@ -75,7 +78,7 @@ public class StickerSelectFragment extends Fragment implements LoaderManager.Loa
 
   @Override
   public Loader<String[]> onCreateLoader(int id, Bundle args) {
-    return new StickerLoader(getActivity(), assetDirectory);
+    return new StickerLoader(getActivity(), assetsDirectories);
   }
 
   @Override

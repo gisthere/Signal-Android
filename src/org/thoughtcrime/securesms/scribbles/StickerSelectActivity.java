@@ -35,6 +35,9 @@ import android.view.MenuItem;
 import org.thoughtcrime.securesms.BaseActionBarActivity;
 import org.thoughtcrime.securesms.R;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 public class StickerSelectActivity extends FragmentActivity implements StickerSelectFragment.StickerSelectionListener {
 
   private static final String TAG = StickerSelectActivity.class.getName();
@@ -42,6 +45,7 @@ public class StickerSelectActivity extends FragmentActivity implements StickerSe
   public static final String EXTRA_STICKER_FILE = "extra_sticker_file";
 
   private static final int[] TAB_TITLES = new int[] {
+      R.drawable.ic_filter_black_24dp,
       R.drawable.ic_tag_faces_white_24dp,
       R.drawable.ic_work_white_24dp,
       R.drawable.ic_pets_white_24dp,
@@ -90,12 +94,19 @@ public class StickerSelectActivity extends FragmentActivity implements StickerSe
       super(fm);
 
       this.fragments = new Fragment[] {
-          StickerSelectFragment.newInstance("stickers/emoticons"),
-          StickerSelectFragment.newInstance("stickers/clothes"),
-          StickerSelectFragment.newInstance("stickers/animals"),
-          StickerSelectFragment.newInstance("stickers/food"),
-          StickerSelectFragment.newInstance("stickers/weather"),
-          };
+          StickerSelectFragment.newInstance(new ArrayList<>(
+                  Arrays.asList(
+                          "stickers/emoticons",
+                          "stickers/clothes",
+                          "stickers/animals",
+                          "stickers/food",
+                          "stickers/weather"))),
+          StickerSelectFragment.newInstance(new ArrayList<>(Arrays.asList("stickers/emoticons"))),
+          StickerSelectFragment.newInstance(new ArrayList<>(Arrays.asList("stickers/clothes"))),
+          StickerSelectFragment.newInstance(new ArrayList<>(Arrays.asList("stickers/animals"))),
+          StickerSelectFragment.newInstance(new ArrayList<>(Arrays.asList("stickers/food"))),
+          StickerSelectFragment.newInstance(new ArrayList<>(Arrays.asList("stickers/weather"))),
+      };
 
       for (Fragment fragment : fragments) {
         ((StickerSelectFragment)fragment).setListener(listener);
